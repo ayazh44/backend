@@ -1,10 +1,6 @@
 import jwt from "jsonwebtoken";
 import { userRepository } from "../data_access/userRepository.js";
 
-
-const JWT_SECRET = "SUPER_SECRET_KEY"; // вынеси в .env
-
-
 export const userService = {
     addNewUser: async (data) => {
         return await userRepository.addNewUser(data);
@@ -26,10 +22,43 @@ export const userService = {
         // 3. Генерируем JWT
         const token = jwt.sign(
             { id: user.id, username: user.username },
-            JWT_SECRET,
+            process.env.JWT_SECRET,
             { expiresIn: "24h" }
         );
 
         return { success: true, token, user };
-    }
+    },
+    logoutUser: async (token) => {
+        let response = "Успешно!";
+        // Декодируем токен, чтобы взять exp
+        const decoded = jwt.decode(token);
+        console.log("hbhj", decoded)
+        if (!decoded) {
+            response = "invalid Token";
+            return response;
+        }
+
+        let status = await userRepository.addTokenToBlacklist(token, decoded);
+        if (!status)
+            response = "Произошла ошибка!";
+        return response;
+    },
+    getUserProfile: async (id) => {
+        const userProfile = await userRepository.getUserProfile(id);
+
+        if (!userProfile) {
+            let result = "Не удалось загрузить данные профиля";
+            return result;
+        }
+        return userProfile;
+    },
+    updateUserProfile: async (id, data) => {
+        const userProfile = await userRepository.updateUserProfile(id, data);
+
+        if(!userProfile) {
+            let result = "не удалось изменить данные";
+            return result;
+        }
+        return userProfile;
+    },
 };

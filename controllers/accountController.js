@@ -1,9 +1,9 @@
-import {userService} from "../business_logic/userService.js";
+import { userService } from "../business_logic/userService.js";
 
-export const registerUser = async(req, res) => {
+export const registerUser = async (req, res) => {
     try {
-        const {username, email, password} = req.body;
-    if (!username || !email || !password) {
+        const { username, email, password } = req.body;
+        if (!username || !email || !password) {
             return res.status(400).json({ message: "Все поля обязательны" });
         }
 
@@ -18,7 +18,7 @@ export const registerUser = async(req, res) => {
     } catch (error) {
         return res.status(500).json({ message: error.message });
     }
-}   
+}
 
 export const loginUser = async (req, res) => {
     try {
@@ -52,3 +52,33 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({ message: error.message });
     }
 };
+
+export const logoutUser = async (req, res) => {
+    const authHeader = req.headers.authorization;
+    console.log("ckdcdvvhih", authHeader);
+
+    if (!authHeader) return res.status(400).json({ message: "No token" });
+    const token = authHeader.split(" ")[1];
+    
+
+    const result = await userService.logoutUser(token);
+
+    res.json({ message: result });
+};
+
+export const getUserProfile = async (req, res) => {
+    const { userId } = req.params;
+    const result = await userService.getUserProfile(userId);
+    res.json({result: result});
+};
+
+export const updateUserProfile = async (req, res) => {
+    try {
+        const { userId } = req.params;
+        await userService.updateUserProfile(userId, req.body);
+        res.json({ message: "Updated successfully" });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+};
+

@@ -1,4 +1,6 @@
 import User from "../models/user.js";
+import BlacklistToken from "../models/blacklistToken.js";
+import { updateUserProfile } from "../controllers/accountController.js";
 
 export const userRepository = {
   addNewUser: async (data) => {
@@ -23,5 +25,24 @@ export const userRepository = {
     User.findOne({ where: { username } }),
 
   getUserByLoginPassword: (data) =>
-    User.findAll({ where: { username: data.username, password: data.password } })
+    User.findAll({ where: { username: data.username, password: data.password } }),
+
+  addTokenToBlacklist: async (token, decoded) => {
+    const status = await BlacklistToken.create({
+      token,
+      expiresAt: new Date(decoded.exp * 1000),
+      userId: decoded.id,
+    });
+    return status;
+  },
+  getUserProfile: async (id) => {
+    const userProfile = await User.findByPk(id, {
+      attributes: { exclude: ["password", "passwordResetToken", "passwordResetExpires"] }
+    });
+    return userProfile;
+  },
+  updateUserProfile: async (id, data) => {
+    const userProfile = await User.update(data, {where: {id}});
+    return userProfile;
+  },
 };
