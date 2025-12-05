@@ -1,6 +1,5 @@
 import app from "./app.js";
 import { connectDB, sequelize } from "./config/db.js";
-// import { formatPrice } from "./utils/formatPrice.js";
 import dotenv from "dotenv";
 
 dotenv.config();
