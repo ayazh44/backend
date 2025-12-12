@@ -6,15 +6,13 @@ class Note extends Model {
     // связь с пользователем
     Note.belongsTo(models.User, {
       foreignKey: "userId",
-      as: "user",
     });
 
     // связь со статьями
     Note.belongsTo(models.Article, {
       foreignKey: "articleId",
-      as: "article",
     });
-  }
+  } 
 }
 
 Note.init(

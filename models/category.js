@@ -1,25 +1,34 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Category extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      Category.hasMany(models.Article, { foreignKey: 'categoryId', as: 'articles' });
-    }
+import { Model, DataTypes } from "sequelize";
+import { sequelize } from "../config/db.js";
+
+class Category extends Model {
+  static associate(models) {
+    // Связь: категория имеет много статей
+    Category.hasMany(models.Article, {
+      foreignKey: 'categoryId',
+    });
   }
-  Category.init({
-    name: DataTypes.STRING,
-    url: DataTypes.STRING,
-    source: DataTypes.STRING
-  }, {
+}
+
+Category.init(
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    url: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    source: {
+      type: DataTypes.STRING,
+      allowNull: true
+    }
+  },
+  {
     sequelize,
     modelName: 'Category',
-  });
-  return Category;
-};
+  }
+);
+
+export default Category;

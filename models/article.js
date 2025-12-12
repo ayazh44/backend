@@ -5,23 +5,19 @@ class Article extends Model {
   static associate(models) {
     Article.belongsTo(models.Category, {
       foreignKey: "categoryId",
-      as: "category",
     });
 
     Article.hasMany(models.Note, {
       foreignKey: "articleId",
-      as: "notes",
     });
 
     Article.hasMany(models.Image, {
       foreignKey: "articleId",
-      as: "images",
     });
 
     Article.belongsToMany(models.Tag, {
       through: models.ArticleTag,
       foreignKey: "articleId",
-      as: "tags",
     });
   }
 }

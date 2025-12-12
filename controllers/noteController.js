@@ -16,7 +16,7 @@ export const createNote = async (req, res) => {
     }
 }
 export const getNoteByUserId = async (req, res) => {
-    try {
+    // try {
         const { userId } = req.params;
         const note = await noteService.getNoteByUserId(userId);
         return res.status(200).json({
@@ -24,7 +24,7 @@ export const getNoteByUserId = async (req, res) => {
             notes: note
         });
 
-    } catch (error) {
-        return res.status(500).json({ message: error.message });
-    }
+    // } catch (error) {
+        // return res.status(500).json({ message: error.message });
+    // }
 }

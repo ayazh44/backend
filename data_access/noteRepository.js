@@ -1,7 +1,18 @@
-import Note from '../models/note.js';
+import { db } from '../models/index.js'
 
 export const noteRepository = {
-    create: (data) => Note.create(data),
-    getByUserId: (userId) => Note.findAll({ where: { userId: userId } }),
-    delete: (id) => Note.destroy({ where: { id } }),
+    create: (data) => db.Note.create(data),
+    getByUserId: (userId) => db.Note.findAll({ 
+        where: { userId: userId }, 
+        include: [
+            { 
+                model: db.User,
+                attributes: ['id']
+            },
+            { 
+                model: db.Article,
+                attributes: ['id', 'title', 'url', 'description', 'content']
+            },
+        ] }),
+    delete: (id) => db.Note.destroy({ where: { id } }),
 };
